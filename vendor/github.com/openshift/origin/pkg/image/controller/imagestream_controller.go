@@ -16,20 +16,12 @@ import (
 	kapi "k8s.io/kubernetes/pkg/api"
 	kcontroller "k8s.io/kubernetes/pkg/controller"
 
-	"github.com/openshift/origin/pkg/client"
 	imageapi "github.com/openshift/origin/pkg/image/apis/image"
-	imageinternalversion "github.com/openshift/origin/pkg/image/generated/listers/image/internalversion"
+	imageclient "github.com/openshift/origin/pkg/image/generated/internalclientset/typed/image/internalversion"
+	imageinformer "github.com/openshift/origin/pkg/image/generated/listers/image/internalversion"
 )
 
 var ErrNotImportable = errors.New("requested image cannot be imported")
-
-// imageStreamLister is the subset interface required off an ImageStream client to
-// implement this controller.
-// TODO: replace with generated informer interfaces
-type imageStreamLister interface {
-	// ImageStreams returns an object that can get ImageStreams.
-	ImageStreams(namespace string) imageinternalversion.ImageStreamNamespaceLister
-}
 
 // Notifier provides information about when the controller makes a decision
 type Notifier interface {
@@ -39,13 +31,13 @@ type Notifier interface {
 
 type ImageStreamController struct {
 	// image stream client
-	isNamespacer client.ImageStreamsNamespacer
+	client imageclient.ImageInterface
 
 	// queue contains replication controllers that need to be synced.
 	queue workqueue.RateLimitingInterface
 
 	// lister can list/get image streams from a shared informer's cache
-	lister imageStreamLister
+	lister imageinformer.ImageStreamLister
 	// listerSynced makes sure the is store is synced before reconciling streams
 	listerSynced cache.InformerSynced
 
@@ -136,7 +128,7 @@ func (c *ImageStreamController) processNextWorkItem() bool {
 	}
 
 	glog.V(3).Infof("Queued import of stream %s/%s...", stream.Namespace, stream.Name)
-	if err := handleImageStream(stream, c.isNamespacer, c.notifier); err != nil {
+	if err := handleImageStream(stream, c.client, c.notifier); err != nil {
 		utilruntime.HandleError(fmt.Errorf("Error syncing image stream: %v", err))
 		c.queue.AddRateLimited(key)
 		return true
@@ -221,7 +213,7 @@ func needsImport(stream *imageapi.ImageStream) (ok bool, partial bool) {
 // 3. spec.DockerImageRepository not defined - import tags per each definition.
 //
 // Notifier, if passed, will be invoked if the stream is going to be imported.
-func handleImageStream(stream *imageapi.ImageStream, isNamespacer client.ImageStreamsNamespacer, notifier Notifier) error {
+func handleImageStream(stream *imageapi.ImageStream, client imageclient.ImageInterface, notifier Notifier) error {
 	ok, partial := needsImport(stream)
 	if !ok {
 		return nil
@@ -259,9 +251,9 @@ func handleImageStream(stream *imageapi.ImageStream, isNamespacer client.ImageSt
 			ImportPolicy: imageapi.TagImportPolicy{Insecure: insecure},
 		}
 	}
-	result, err := isNamespacer.ImageStreams(stream.Namespace).Import(isi)
+	result, err := client.ImageStreamImports(stream.Namespace).Create(isi)
 	if err != nil {
-		if apierrs.IsNotFound(err) && client.IsStatusErrorKind(err, "imageStream") {
+		if apierrs.IsNotFound(err) && isStatusErrorKind(err, "imageStream") {
 			return ErrNotImportable
 		}
 		glog.V(4).Infof("Import stream %s/%s partial=%t error: %v", stream.Namespace, stream.Name, partial, err)
@@ -269,4 +261,14 @@ func handleImageStream(stream *imageapi.ImageStream, isNamespacer client.ImageSt
 		glog.V(5).Infof("Import stream %s/%s partial=%t import: %#v", stream.Namespace, stream.Name, partial, result.Status.Import)
 	}
 	return err
+}
+
+// isStatusErrorKind returns true if this error describes the provided kind.
+func isStatusErrorKind(err error, kind string) bool {
+	if s, ok := err.(apierrs.APIStatus); ok {
+		if details := s.Status().Details; details != nil {
+			return kind == details.Kind
+		}
+	}
+	return false
 }

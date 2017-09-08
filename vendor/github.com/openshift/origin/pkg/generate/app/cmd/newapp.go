@@ -30,13 +30,13 @@ import (
 	buildutil "github.com/openshift/origin/pkg/build/util"
 	"github.com/openshift/origin/pkg/client"
 	cmdutil "github.com/openshift/origin/pkg/cmd/util"
-	"github.com/openshift/origin/pkg/dockerregistry"
 	"github.com/openshift/origin/pkg/generate"
 	"github.com/openshift/origin/pkg/generate/app"
 	"github.com/openshift/origin/pkg/generate/dockerfile"
 	"github.com/openshift/origin/pkg/generate/jenkinsfile"
 	"github.com/openshift/origin/pkg/generate/source"
 	imageapi "github.com/openshift/origin/pkg/image/apis/image"
+	dockerregistry "github.com/openshift/origin/pkg/image/importer/dockerv1client"
 	outil "github.com/openshift/origin/pkg/util"
 	dockerfileutil "github.com/openshift/origin/pkg/util/docker/dockerfile"
 )
@@ -100,6 +100,7 @@ type AppConfig struct {
 	SkipGeneration bool
 
 	AllowSecretUse              bool
+	SourceSecret                string
 	AllowNonNumericExposedPorts bool
 	SecretAccessor              app.SecretAccessor
 
@@ -879,6 +880,15 @@ func (c *AppConfig) Run() (*AppResult, error) {
 		for _, obj := range objects {
 			if bc, ok := obj.(*buildapi.BuildConfig); ok {
 				name = bc.Name
+				break
+			}
+		}
+	}
+	if len(c.SourceSecret) > 0 {
+		for _, obj := range objects {
+			if bc, ok := obj.(*buildapi.BuildConfig); ok {
+				glog.V(4).Infof("Setting source secret for build config to: %v", c.SourceSecret)
+				bc.Spec.Source.SourceSecret = &kapi.LocalObjectReference{Name: c.SourceSecret}
 				break
 			}
 		}

@@ -45,10 +45,18 @@ os::cmd::expect_failure_and_text 'oc new-app mysql-persisten mysql' 'mysql-persi
 os::cmd::expect_failure_and_text 'oc new-app mysql-persisten mysql' 'mysql as a local directory'
 os::cmd::expect_failure_and_text 'oc new-app --strategy=docker https://192.30.253.113/openshift/ruby-hello-world.git' 'as a Git repository URL:  '
 os::cmd::expect_failure_and_text 'oc new-app https://www.google.com/openshift/nodejs-e' 'as a Git repository URL:  '
-os::cmd::expect_failure_and_text 'oc new-app https://githb.com/openshift/nodejs-e' 'as a Git repository URL:  '
+os::cmd::expect_failure_and_text 'oc new-app https://examplegit.com/openshift/nodejs-e' 'as a Git repository URL:  '
 os::cmd::expect_failure_and_text 'oc new-build --strategy=docker https://192.30.253.113/openshift/ruby-hello-world.git' 'as a Git repository URL:  '
 os::cmd::expect_failure_and_text 'oc new-build https://www.google.com/openshift/nodejs-e' 'as a Git repository URL:  '
-os::cmd::expect_failure_and_text 'oc new-build https://githb.com/openshift/nodejs-e' 'as a Git repository URL:  '
+os::cmd::expect_failure_and_text 'oc new-build https://examplegit.com/openshift/nodejs-e' 'as a Git repository URL:  '
+
+# setting source secret via the --source-secret flag
+os::cmd::expect_success_and_text 'oc new-app https://github.com/openshift/cakephp-ex --source-secret=mysecret -o yaml' 'name: mysecret'
+os::cmd::expect_success_and_text 'oc new-build https://github.com/openshift/cakephp-ex --source-secret=mynewsecret -o yaml' 'name: mynewsecret'
+os::cmd::expect_success_and_text 'oc new-app -f examples/quickstarts/cakephp-mysql.json --source-secret=mysecret -o yaml' 'name: mysecret'
+os::cmd::expect_success 'oc new-app https://github.com/openshift/cakephp-ex --source-secret=mysecret'
+os::cmd::expect_success 'oc delete all --selector="label=cakephp-ex"'
+
 
 # check label creation
 os::cmd::try_until_success 'oc get imagestreamtags php:latest'
@@ -94,6 +102,14 @@ os::cmd::expect_success_and_text 'oc new-app ruby-helloworld-sample -o yaml' 'MY
 os::cmd::expect_success_and_text 'oc new-app ruby-helloworld-sample --param MYSQL_PASSWORD=hello -o yaml' 'hello'
 os::cmd::expect_success_and_text  'oc new-app -e FOO=BAR -f examples/jenkins/jenkins-ephemeral-template.json -o jsonpath="{.items[?(@.kind==\"DeploymentConfig\")].spec.template.spec.containers[0].env[?(@.name==\"FOO\")].value}" ' '^BAR$'
 os::cmd::expect_success_and_text  'oc new-app -e OPENSHIFT_ENABLE_OAUTH=false -f examples/jenkins/jenkins-ephemeral-template.json -o jsonpath="{.items[?(@.kind==\"DeploymentConfig\")].spec.template.spec.containers[0].env[?(@.name==\"OPENSHIFT_ENABLE_OAUTH\")].value}" ' 'false'
+
+# check that multiple resource groups are printed with their respective external version
+os::cmd::expect_success_and_text 'oc new-app -f test/testdata/template_multiple_resource_gvs.yaml -o yaml' 'apiVersion: apps/v1beta1'
+# check that if an --output-version is requested on a list of varying resource kinds, an error is returned if
+# at least one of the resource groups does not support the given version
+os::cmd::expect_failure_and_text 'oc new-app -f test/testdata/template_multiple_resource_gvs.yaml -o yaml --output-version=v1' 'extensions.Deployment is not suitable for converting'
+os::cmd::expect_failure_and_text 'oc new-app -f test/testdata/template_multiple_resource_gvs.yaml -o yaml --output-version=extensions/v1beta1' 'api.Secret is not suitable for converting'
+os::cmd::expect_failure_and_not_text 'oc new-app -f test/testdata/template_multiple_resource_gvs.yaml -o yaml --output-version=apps/v1beta1' 'extensions.Deployment is not suitable for converting'
 
 # check that an error is produced when using --context-dir with a template
 os::cmd::expect_failure_and_text 'oc new-app -f examples/sample-app/application-template-stibuild.json --context-dir=example' '\-\-context-dir is not supported when using a template'
