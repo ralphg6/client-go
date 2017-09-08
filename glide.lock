@@ -1,6 +1,92 @@
 hash: 71eafbbbc497f9aadb270bedc5e22c1a6c07b70dde9ee1b66d23e41ed60eee4a
-updated: 2017-09-08T13:15:01.101999685-04:00
+updated: 2017-09-08T13:18:16.753281672-04:00
 imports:
+- name: github.com/beorn7/perks
+  version: 3ac7bf7a47d159a033b107610db8a1b6575507a4
+  subpackages:
+  - quantile
+- name: github.com/blang/semver
+  version: b38d23b8782a487059e8fc8773e9a5b228a77cb6
+- name: github.com/coreos/etcd
+  version: 61fc123e7a8b14a0a258aa3f5c4159861b1ec2e7
+  subpackages:
+  - alarm
+  - auth
+  - auth/authpb
+  - client
+  - clientv3
+  - clientv3/concurrency
+  - clientv3/namespace
+  - clientv3/naming
+  - compactor
+  - discovery
+  - embed
+  - error
+  - etcdserver
+  - etcdserver/api
+  - etcdserver/api/v2http
+  - etcdserver/api/v2http/httptypes
+  - etcdserver/api/v3client
+  - etcdserver/api/v3election
+  - etcdserver/api/v3election/v3electionpb
+  - etcdserver/api/v3election/v3electionpb/gw
+  - etcdserver/api/v3lock
+  - etcdserver/api/v3lock/v3lockpb
+  - etcdserver/api/v3lock/v3lockpb/gw
+  - etcdserver/api/v3rpc
+  - etcdserver/api/v3rpc/rpctypes
+  - etcdserver/auth
+  - etcdserver/etcdserverpb
+  - etcdserver/etcdserverpb/gw
+  - etcdserver/membership
+  - etcdserver/stats
+  - integration
+  - lease
+  - lease/leasehttp
+  - lease/leasepb
+  - mvcc
+  - mvcc/backend
+  - mvcc/mvccpb
+  - pkg/adt
+  - pkg/contention
+  - pkg/cors
+  - pkg/cpuutil
+  - pkg/crc
+  - pkg/debugutil
+  - pkg/fileutil
+  - pkg/httputil
+  - pkg/idutil
+  - pkg/ioutil
+  - pkg/logutil
+  - pkg/monotime
+  - pkg/netutil
+  - pkg/osutil
+  - pkg/pathutil
+  - pkg/pbutil
+  - pkg/runtime
+  - pkg/schedule
+  - pkg/srv
+  - pkg/testutil
+  - pkg/tlsutil
+  - pkg/transport
+  - pkg/types
+  - pkg/wait
+  - proxy/grpcproxy
+  - proxy/grpcproxy/adapter
+  - proxy/grpcproxy/cache
+  - raft
+  - raft/raftpb
+  - rafthttp
+  - snap
+  - snap/snappb
+  - store
+  - version
+  - wal
+  - wal/walpb
+- name: github.com/coreos/go-semver
+  version: d043ae190b3202550d026daf009359bb5d761672
+  subpackages:
+  - semver
 - name: github.com/davecgh/go-spew
   version: 5215b55f46b2b919f50a1df0eaa5886afe4e3b3d
   subpackages:
@@ -8,14 +94,67 @@ imports:
 - name: github.com/docker/distribution
   version: cd27f179f2c10c5d300e6d09025b538c475b0d51
   subpackages:
+  - context
   - digest
+  - manifest
+  - manifest/schema1
+  - manifest/schema2
   - reference
+  - uuid
+- name: github.com/docker/engine-api
+  version: dea108d3aa0c67d7162a3fd8aa65f38a430019fd
+  subpackages:
+  - client
+  - client/transport
+  - client/transport/cancellable
+  - types
+  - types/blkiodev
+  - types/container
+  - types/filters
+  - types/network
+  - types/reference
+  - types/registry
+  - types/strslice
+  - types/time
+  - types/versions
+- name: github.com/docker/go-connections
+  version: f549a9393d05688dff0992ef3efd8bbe6c628aeb
+  subpackages:
+  - nat
+  - sockets
+  - tlsconfig
+- name: github.com/docker/go-units
+  version: e30f1e79f3cd72542f2026ceec18d3bd67ab859c
+- name: github.com/docker/libtrust
+  version: c54fbb67c1f1e68d7d6f8d2ad7c9360404616a41
 - name: github.com/emicklei/go-restful
   version: ff4f55a206334ef123e4f79bbf348980da81ca46
   subpackages:
   - log
 - name: github.com/emicklei/go-restful-swagger12
   version: dcef7f55730566d41eae5db10e7d6981829720f6
+- name: github.com/exponent-io/jsonpath
+  version: d6023ce2651d8eafb5c75bb0c7167536102ec9f5
+- name: github.com/fsouza/go-dockerclient
+  version: 3f9370a4738ba8d0ed6eea63582ca6db5eb48032
+  subpackages:
+  - external/github.com/Sirupsen/logrus
+  - external/github.com/docker/docker/opts
+  - external/github.com/docker/docker/pkg/archive
+  - external/github.com/docker/docker/pkg/fileutils
+  - external/github.com/docker/docker/pkg/homedir
+  - external/github.com/docker/docker/pkg/idtools
+  - external/github.com/docker/docker/pkg/ioutils
+  - external/github.com/docker/docker/pkg/longpath
+  - external/github.com/docker/docker/pkg/pools
+  - external/github.com/docker/docker/pkg/promise
+  - external/github.com/docker/docker/pkg/stdcopy
+  - external/github.com/docker/docker/pkg/system
+  - external/github.com/docker/go-units
+  - external/github.com/hashicorp/go-cleanhttp
+  - external/github.com/opencontainers/runc/libcontainer/user
+  - external/golang.org/x/net/context
+  - external/golang.org/x/sys/unix
 - name: github.com/ghodss/yaml
   version: 73d445a93680fa1a78ae23a5839bad48f32ba1ee
 - name: github.com/go-openapi/analysis
@@ -37,8 +176,20 @@ imports:
   - sortkeys
 - name: github.com/golang/glog
   version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
+- name: github.com/golang/protobuf
+  version: 4bd1920723d7b7c925de087aa32e2187708897f7
+  subpackages:
+  - proto
 - name: github.com/google/gofuzz
   version: 44d81051d367757e1c7c6a5a86423ece9afcf63c
+- name: github.com/gorilla/context
+  version: 215affda49addc4c8ef7e2534915df2c8c35c6cd
+- name: github.com/gorilla/mux
+  version: 8096f47503459bcc74d1f4c487b7e6e42e5746b5
+- name: github.com/hashicorp/golang-lru
+  version: a0d98a5f288019575c6d1f4bb1573fef2d1fcdc4
+  subpackages:
+  - simplelru
 - name: github.com/juju/ratelimit
   version: 5b9ff866471762aa2ab2dced63c9fb6f53921342
 - name: github.com/mailru/easyjson
@@ -47,28 +198,116 @@ imports:
   - buffer
   - jlexer
   - jwriter
+- name: github.com/matttproud/golang_protobuf_extensions
+  version: fc2b8d3a73c4867e51861bbdd5ae3c1f0869dd6a
+  subpackages:
+  - pbutil
 - name: github.com/openshift/origin
   version: 8a4795298846dd3f99029b2af609d6be8be14ea5
   subpackages:
+  - pkg/api
   - pkg/api/extension
+  - pkg/api/legacy
+  - pkg/apps/apis/apps
+  - pkg/apps/apis/apps/install
   - pkg/apps/apis/apps/v1
+  - pkg/authorization/apis/authorization
+  - pkg/authorization/apis/authorization/install
   - pkg/authorization/apis/authorization/v1
+  - pkg/build/apis/build
+  - pkg/build/apis/build/install
   - pkg/build/apis/build/v1
+  - pkg/build/generated/listers/build/internalversion
+  - pkg/build/util
+  - pkg/image/apis/image
+  - pkg/image/apis/image/docker10
+  - pkg/image/apis/image/dockerpre012
+  - pkg/image/apis/image/install
   - pkg/image/apis/image/v1
+  - pkg/image/reference
+  - pkg/network/apis/network
+  - pkg/network/apis/network/install
   - pkg/network/apis/network/v1
+  - pkg/oauth/apis/oauth
+  - pkg/oauth/apis/oauth/install
   - pkg/oauth/apis/oauth/v1
+  - pkg/project/apis/project
+  - pkg/project/apis/project/install
   - pkg/project/apis/project/v1
+  - pkg/quota/apis/quota
+  - pkg/quota/apis/quota/install
   - pkg/quota/apis/quota/v1
+  - pkg/route/apis/route
+  - pkg/route/apis/route/install
   - pkg/route/apis/route/v1
+  - pkg/security/apis/security
+  - pkg/security/apis/security/install
   - pkg/security/apis/security/v1
+  - pkg/security/securitycontextconstraints/util
   - pkg/template/apis/template
   - pkg/template/apis/template/install
   - pkg/template/apis/template/v1
+  - pkg/user/apis/user
   - pkg/user/apis/user/v1
+  - pkg/user/apis/user/validation
+  - pkg/util/namer
+- name: github.com/openshift/source-to-image
+  version: 06c9446cd6b580cbcb13a1489efcb3e943b470af
+  subpackages:
+  - pkg/api
+  - pkg/api/describe
+  - pkg/api/validation
+  - pkg/build
+  - pkg/build/strategies
+  - pkg/build/strategies/layered
+  - pkg/build/strategies/onbuild
+  - pkg/build/strategies/sti
+  - pkg/docker
+  - pkg/errors
+  - pkg/ignore
+  - pkg/scm
+  - pkg/scm/downloaders
+  - pkg/scm/downloaders/empty
+  - pkg/scm/downloaders/file
+  - pkg/scm/downloaders/git
+  - pkg/scm/git
+  - pkg/scripts
+  - pkg/tar
+  - pkg/util
+  - pkg/util/cmd
+  - pkg/util/cygpath
+  - pkg/util/fs
+  - pkg/util/glog
+  - pkg/util/interrupt
+  - pkg/util/status
+  - pkg/util/user
+- name: github.com/pborman/uuid
+  version: ca53cad383cad2479bbba7f7a1a05797ec1386e4
+- name: github.com/prometheus/client_golang
+  version: e7e903064f5e9eb5da98208bae10b475d4db0f8c
+  subpackages:
+  - prometheus
+  - prometheus/promhttp
+- name: github.com/prometheus/client_model
+  version: fa8ad6fec33561be4280a8f0514318c79d7f6cb6
+  subpackages:
+  - go
+- name: github.com/prometheus/common
+  version: 13ba4ddd0caa9c28ca7b7bffe1dfa9ed8d5ef207
+  subpackages:
+  - expfmt
+  - internal/bitbucket.org/ww/goautoneg
+  - model
+- name: github.com/prometheus/procfs
+  version: 65c1f6f8f0fc1e2185eb9863a3bc751496404259
+  subpackages:
+  - xfs
 - name: github.com/PuerkitoBio/purell
   version: 8a290539e2e8629dbc4e6bad948158f790ec31f4
 - name: github.com/PuerkitoBio/urlesc
   version: 5bd2802263f21d8788851d5305584c82a5c75d7e
+- name: github.com/Sirupsen/logrus
+  version: aaf92c95712104318fc35409745f1533aa5ff327
 - name: github.com/spf13/pflag
   version: 9ff6c6923cfffbcd502984b8e0c80539a94968b7
 - name: github.com/ugorji/go
@@ -83,7 +322,9 @@ imports:
   - http2
   - http2/hpack
   - idna
+  - internal/timeseries
   - lex/httplex
+  - trace
 - name: golang.org/x/text
   version: 2910a502d2bf9e43193af9d68ca516529614eed3
   subpackages:
@@ -97,6 +338,18 @@ imports:
   - unicode/bidi
   - unicode/norm
   - width
+- name: google.golang.org/grpc
+  version: 777daa17ff9b5daef1cfdf915088a2ada3332bf0
+  subpackages:
+  - codes
+  - credentials
+  - credentials/oauth
+  - grpclog
+  - internal
+  - metadata
+  - naming
+  - peer
+  - transport
 - name: gopkg.in/inf.v0
   version: 3887ee99ecf07df5b447e9b00d9c0b2adaa9f3e4
 - name: gopkg.in/yaml.v2
@@ -108,11 +361,15 @@ imports:
   - pkg/api/errors
   - pkg/api/meta
   - pkg/api/resource
+  - pkg/api/validation
+  - pkg/api/validation/path
   - pkg/apimachinery
   - pkg/apimachinery/announced
   - pkg/apimachinery/registered
+  - pkg/apis/meta/internalversion
   - pkg/apis/meta/v1
   - pkg/apis/meta/v1/unstructured
+  - pkg/apis/meta/v1/validation
   - pkg/apis/meta/v1alpha1
   - pkg/conversion
   - pkg/conversion/queryparams
@@ -130,6 +387,7 @@ imports:
   - pkg/runtime/serializer/versioning
   - pkg/selection
   - pkg/types
+  - pkg/util/cache
   - pkg/util/clock
   - pkg/util/diff
   - pkg/util/errors
@@ -140,6 +398,7 @@ imports:
   - pkg/util/rand
   - pkg/util/runtime
   - pkg/util/sets
+  - pkg/util/uuid
   - pkg/util/validation
   - pkg/util/validation/field
   - pkg/util/wait
@@ -147,6 +406,27 @@ imports:
   - pkg/version
   - pkg/watch
   - third_party/forked/golang/reflect
+- name: k8s.io/apiserver
+  version: b2a8ad67a002d27c8945573abb80b4be543f2a1f
+  subpackages:
+  - pkg/apis/audit
+  - pkg/authentication/serviceaccount
+  - pkg/authentication/user
+  - pkg/endpoints/request
+  - pkg/features
+  - pkg/registry/generic
+  - pkg/registry/rest
+  - pkg/storage
+  - pkg/storage/etcd
+  - pkg/storage/etcd/metrics
+  - pkg/storage/etcd/util
+  - pkg/storage/etcd3
+  - pkg/storage/names
+  - pkg/storage/storagebackend
+  - pkg/storage/storagebackend/factory
+  - pkg/storage/value
+  - pkg/util/feature
+  - pkg/util/trace
 - name: k8s.io/client-go
   version: 2a227f04f328fe506bd562f50b4d2a175fce80c5
   subpackages:
@@ -193,6 +473,7 @@ imports:
   - rest
   - rest/watch
   - testing
+  - tools/cache
   - tools/clientcmd/api
   - tools/metrics
   - transport
@@ -209,8 +490,24 @@ imports:
   version: 2dcf54ed6478f896cd98ef64520f9618fecd7edc
   subpackages:
   - pkg/api
+  - pkg/api/helper
+  - pkg/api/service
+  - pkg/api/util
   - pkg/api/v1
+  - pkg/api/v1/helper
+  - pkg/api/validation
+  - pkg/apis/apps
+  - pkg/apis/apps/v1beta1
   - pkg/apis/extensions
+  - pkg/apis/extensions/v1beta1
+  - pkg/apis/networking
+  - pkg/apis/rbac
+  - pkg/capabilities
+  - pkg/credentialprovider
+  - pkg/features
+  - pkg/registry/core/namespace
+  - pkg/security/apparmor
   - pkg/util
+  - pkg/util/net/sets
   - pkg/util/parsers
 testImports: []
